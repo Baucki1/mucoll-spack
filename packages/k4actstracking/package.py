@@ -8,13 +8,13 @@ class K4actstracking(CMakePackage, Key4hepPackage):
     homepage = "https://github.com/key4hep/k4ActsTracking"
     # todo
     url = "https://github.com/key4hep/k4ActsTracking/archive/refs/tags/v00-01.tar.gz"
-    git = "https://github.com/key4hep/k4ActsTracking.git"
+    git = "https://github.com/Baucki1/k4ActsTracking.git"
 
     maintainers("vvolkl")
 
     version("main", branch="main")
     version("calosurface-extrapolation", branch="calosurface-extrapolation")
-    version("gnn", branch="gnn-tracking-pipeiline-and-gen3-geo-tracking")
+    version("gnn", branch="gnn-tracking-pipeline") #gnn-tracking-pipeiline-and-gen3-geo-tracking
 
     version(
         "00-04",
