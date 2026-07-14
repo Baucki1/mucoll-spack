@@ -44,7 +44,6 @@ class MucollStack(BundlePackage, Key4hepPackage):
     variant('llvm', default=False, description='Build with LLVM')
     variant('ml', default=False, description='Build with machine learning tools')
     variant('pytools', default=False, description='Build with python tools')
-    variant('analysis', default=False, description='Minimal build for analysis only')
     variant('sim', default=False, description='Build with reconstruction and simulation tools')
     variant('gen', default=False, description='Build with generators')
 
@@ -59,15 +58,16 @@ class MucollStack(BundlePackage, Key4hepPackage):
     depends_on('ccache')
     depends_on('ninja')
 
-    with when('+analysis'):
-        depends_on('edm4hep')
-        depends_on('podio')
+    # Minimal build for analysis only
+    depends_on('edm4hep')
+    depends_on('podio')
 
     with when('+sim'):
         ############################### Key4hep ###############
         #######################################################
         depends_on('dd4hep')
         depends_on('delphes')
+        depends_on('hepmc3')
 
         depends_on('k4geo')
         depends_on('k4reco')
@@ -76,47 +76,49 @@ class MucollStack(BundlePackage, Key4hepPackage):
         # k4SimGeant4 provides the GeoSvc that the MAIA/MuColl reconstruction
         # workflow loads at runtime (with EnableGeant4Geo=False).
         depends_on('k4simgeant4')
-        depends_on('k4marlinwrapper')
+        #depends_on('k4marlinwrapper')
 
         ############################### ILCSoft ###############
         #######################################################
-        depends_on('aidatt')
-        depends_on('raida')
-        depends_on('sio')
-        depends_on('ced')
-        depends_on('cedviewer')
-        depends_on('garlic')
-        depends_on('generalbrokenlines')
-        depends_on('gear')
-        depends_on('ilcutil')
-        depends_on('lcfiplus')
-        depends_on('lcfivertex')
-        depends_on('marlin')
-        depends_on('marlinutil')
-        depends_on('marlindd4hep')
-        depends_on('marlinreco')
-        depends_on('marlinfastjet')
-        depends_on('marlinkinfit')
-        depends_on('marlinkinfitprocessors')
-        depends_on('marlintrk')
-        depends_on('kaldet')
-        depends_on('ddkaltest')
-        depends_on('kitrackmarlin')
-        depends_on('kaltest')
-        depends_on('kitrack')
-        depends_on('fcalclusterer')
-        depends_on('pandoraanalysis')
-        depends_on('pandorapfa')
-        depends_on('clicperformance')
+        #depends_on('aidatt')
+        #depends_on('raida')
+        #depends_on('sio')
+        #depends_on('ced')
+        #depends_on('cedviewer')
+        #depends_on('garlic')
+        #depends_on('generalbrokenlines')
+        #depends_on('gear')
+        #depends_on('ilcutil')
+        #depends_on('lcfiplus')
+        #depends_on('lcfivertex')
+        #depends_on('marlin')
+        #depends_on('marlinutil')
+        #depends_on('marlindd4hep')
+        #depends_on('marlinreco')
+        #depends_on('marlinfastjet')
+        #depends_on('marlinkinfit')
+        # depends_on('marlinkinfitprocessors')
+        # depends_on('marlintrk')
+        # depends_on('kaldet')
+        # depends_on('ddkaltest')
+        #depends_on('kitrackmarlin')
+        #depends_on('kaltest')
+        #depends_on('kitrack')
+        #depends_on('fcalclusterer')
+        #depends_on('pandoraanalysis')
+        #depends_on('pandorapfa')
+        #depends_on('clicperformance')
 
         ############ custom Muon Collider packages ############
         #######################################################
-        depends_on('muoncvxddigitiser')
-        depends_on('mybibutils')
+        #depends_on('muoncvxddigitiser')
+        #depends_on('mybibutils')
+        #depends_on('acorn')
 
     with when('+gen'):
-        depends_on('whizard +lcio +openloops')
-        depends_on('hepmc3')
+        depends_on('whizard +openloops')
+        depends_on('madgraph5amc')
+        depends_on('pythia8')
 
     ##################### developer tools #################
     #######################################################
@@ -127,14 +129,12 @@ class MucollStack(BundlePackage, Key4hepPackage):
     depends_on('llvm', when='+llvm')
 
     with when('+ml'):
-        #depends_on("k4mltracking")
         # ML tools
         depends_on('onnx')
         depends_on('xgboost')
         depends_on('py-onnxruntime')
         depends_on('py-onnx')
         depends_on("py-torch")
-        depends_on('acorn')
         depends_on('torch-scatter')
         depends_on('py-torch-scatter')
         depends_on('py-scikit-learn')
@@ -151,6 +151,7 @@ class MucollStack(BundlePackage, Key4hepPackage):
         depends_on('py-pip')
         depends_on('py-scipy')
         depends_on('py-uproot')
+        depends_on('py-cppy')
 
     ##################### conflicts #######################
     #######################################################

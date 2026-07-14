@@ -12,11 +12,50 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased] — 3.x series
 
-The `main` branch now targets the **3.x release series** (`mucoll-stack@3.0`). This is a major
-restructuring of how the stack is built and distributed.
+Work in progress on `main` on top of `v3.0`.
 
 ### Added
-- **Layered build and image chain.** The stack is now organised as three nested root specs
+- **Event generators in the `sim` image.** New `+gen` variant pulling in `whizard +openloops`,
+  `madgraph5amc`, and `pythia8`. The published `sim` layer is now built as `+sim+gen` — both the
+  `mucoll-layered` environment and the CI (`amd64`/`arm64`) — so generators ship alongside
+  reconstruction and simulation in the same image.
+
+### Changed
+- **Simplified the layered build from three images to two.** Collapsed the
+  `analysis ⊂ sim ⊂ ml` chain into `analysis ⊂ sim`: the machine-learning tools (`+ml`) are now
+  folded into the base analysis layer instead of shipping as a separate `mucoll-ml` image, and both
+  the `analysis` and `sim` roots carry `+ml`. Removed the dedicated `+analysis` variant — the
+  edm4hep/podio analysis stack is now the always-installed base of every layer. Moved `hepmc3`
+  into the `+sim` layer.
+- Pinned `numpy`/`eigen`/`sympy`/`py-fsspec` versions in `packages.yaml` so the `analysis` and
+  `sim` roots stay shareable under `unify: when_possible` (e.g. capping `numpy` at the
+  numba-compatible ceiling). Disabled Geant4 examples to trim the build.
+- Dropped `+lcio` from the Whizard spec (now `whizard +openloops`).
+
+### Removed
+- **Dropped the GNN tracking path from the default build.** `k4actstracking` now tracks `@main`
+  instead of the `@gnn+gnn` branch, and the ACORN (GNN4ITk) dependency is disabled, so the standard
+  `+sim` build no longer pulls the PyTorch-Geometric-based GNN tracking pipeline. The `+ml` tools
+  (`py-torch`, `onnx`, `xgboost`, …) remain in the base analysis layer.
+- **Removed Marlin, ILCSoft, and LCIO from the stack.** Dropped the entire Marlin/ILCSoft
+  reconstruction chain (`marlin`, `marlinreco`, `marlintrk`, `marlinutil`, `marlindd4hep`,
+  `marlinfastjet`, `marlinkinfit*`, `pandorapfa`/`pandoraanalysis`, `gear`, `kaltest`/`ddkaltest`,
+  `kitrack*`, `clicperformance`, `fcalclusterer`, `generalbrokenlines`, `aidatt`, `raida`, `sio`,
+  `ced`/`cedviewer`, `garlic`, `lcfiplus`/`lcfivertex`, …) together with `k4marlinwrapper` and the
+  `lcio` pin from the stack's direct dependencies, along with the now-unused `muoncvxddigitiser` and
+  `mybibutils` recipes. Reconstruction is now driven entirely by the native key4hep/`k4reco` path
+  (`k4reco` can still optionally pull upstream `lcio` via its `+conformal_tracking` variant).
+- Dropped the local `k4geo` recipe in favour of the upstream Spack package.
+
+---
+
+## [v3.0] — 2026-06-20
+
+First release of the **3.x series** (`mucoll-stack@3.0`) — a major restructuring of how the stack
+is built and distributed.
+
+### Added
+- **Layered build and image chain.** The stack is organised as three nested root specs
   (`analysis ⊂ sim ⊂ ml`) concretized together under `unify: when_possible`, so every shared
   dependency resolves to a single hash and is installed only once. The CI publishes a chain of
   images that build on top of one another:
@@ -43,10 +82,13 @@ restructuring of how the stack is built and distributed.
 - Switched several components to upstream `main`/`master` branches: `k4fwcore`, `k4gen`,
   `k4marlinwrapper` handling, ACTS.
 - Builds target both `x86_64` and `aarch64` (multi-arch images).
+- Re-added `k4marlinwrapper` and `k4simgeant4` to the `+sim` layer (the latter provides the
+  `GeoSvc` that the MAIA/MuColl reconstruction workflow loads at runtime).
+- Added `ccache` as a build dependency.
 
 ### Removed
-- Dropped `k4simgeant4`, `k4simdelphes`, the standalone `k4marlinwrapper`, the separate `lcgeo`
-  package (replaced by `k4geo`), and `pytools` cherry-picks no longer needed.
+- Dropped `k4simdelphes`, the separate `lcgeo` package (replaced by `k4geo`), and `pytools`
+  cherry-picks no longer needed.
 
 ### Fixed
 - ML stack concretization on `aarch64`: pin `llvm@20` with stable `numba`/`llvmlite`, install
@@ -152,7 +194,8 @@ First tagged release of the 2.x series — Spack recipes for the Muon Collider s
 
 ---
 
-[Unreleased]: https://github.com/MuonColliderSoft/mucoll-spack/compare/v2.11...main
+[Unreleased]: https://github.com/MuonColliderSoft/mucoll-spack/compare/v3.0...main
+[v3.0]: https://github.com/MuonColliderSoft/mucoll-spack/releases/tag/v3.0
 [v2.11]: https://github.com/MuonColliderSoft/mucoll-spack/releases/tag/v2.11
 [v2.10.1]: https://github.com/MuonColliderSoft/mucoll-spack/releases/tag/v2.10.1
 [v2.10]: https://github.com/MuonColliderSoft/mucoll-spack/releases/tag/v2.10
