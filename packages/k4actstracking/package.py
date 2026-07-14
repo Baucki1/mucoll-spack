@@ -5,10 +5,10 @@ from spack.pkg.k4.key4hep_stack import Key4hepPackage
 class K4actstracking(CMakePackage, Key4hepPackage):
     """Acts tracking components for the key4hep project"""
 
-    homepage = "https://github.com/Baucki1/k4ActsTracking"
+    homepage = "https://github.com/key4hep/k4ActsTracking"
     # todo
-    url = "https://github.com/Baucki1/k4ActsTracking/archive/refs/tags/v00-01.tar.gz"
-    git = "https://github.com/Baucki1/k4ActsTracking.git"
+    url = "https://github.com/key4hep/k4ActsTracking/archive/refs/tags/v00-01.tar.gz"
+    git = "https://github.com/key4hep/k4ActsTracking.git"
 
     maintainers("vvolkl")
 
