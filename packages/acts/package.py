@@ -40,7 +40,7 @@ class Acts(CMakePackage, CudaPackage):
     """
 
     homepage = "https://acts.web.cern.ch/ACTS/"
-    git = "https://github.com/Baucki1/acts.git"
+    git = "https://github.com/acts-project/acts.git"
     list_url = "https://github.com/acts-project/acts/releases/"
     maintainers("wdconinc", "stephenswat")
 
