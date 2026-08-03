@@ -41,6 +41,7 @@ class MucollStack(BundlePackage, Key4hepPackage):
     variant('build_type', default='Release',
             description='CMake build type',
             values=('Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'))
+    variant('cuda', default=False, description='Build the stack with CUDA support')
     variant('llvm', default=False, description='Build with LLVM')
     variant('ml', default=False, description='Build with machine learning tools')
     variant('pytools', default=False, description='Build with python tools')
@@ -72,7 +73,8 @@ class MucollStack(BundlePackage, Key4hepPackage):
         depends_on('k4geo')
         depends_on('k4reco')
         depends_on('k4gaudipandora')
-        depends_on('k4actstracking')
+        depends_on('k4actstracking+cuda', when='+cuda')
+        depends_on('k4actstracking~cuda', when='~cuda')
         # k4SimGeant4 provides the GeoSvc that the MAIA/MuColl reconstruction
         # workflow loads at runtime (with EnableGeant4Geo=False).
         depends_on('k4simgeant4')
@@ -134,7 +136,7 @@ class MucollStack(BundlePackage, Key4hepPackage):
         depends_on('xgboost')
         depends_on('py-onnxruntime')
         depends_on('py-onnx')
-        depends_on("py-torch")
+        depends_on('py-torch')
         depends_on('torch-scatter')
         depends_on('py-torch-scatter')
         depends_on('py-scikit-learn')

@@ -40,8 +40,15 @@ class K4actstracking(CMakePackage, Key4hepPackage):
         default=False,
         description="Build the GNN track finding pipeline",
     )
+    variant(
+        "cuda",
+        default=False,
+        description="Enable CUDA support in the Acts dependency chain",
+    )
 
     depends_on("acts+dd4hep+json")
+    depends_on("acts+dd4hep+json+cuda", when="+cuda")
+    depends_on("acts+dd4hep+json~cuda", when="~cuda")
     # The GNN tracking pipeline is the only consumer of the acts GNN plugin.
     depends_on("acts+dd4hep+json+gnn+onnx+torch", when="+gnn")
     depends_on("gaudi")

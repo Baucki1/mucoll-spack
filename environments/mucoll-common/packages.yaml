@@ -1,7 +1,7 @@
 packages:
   all:
     target: [x86_64, aarch64]
-    variants: build_type=Release cxxstd=20
+    variants: build_type=Release cxxstd=20 cuda_arch=80
     buildable: true
 
   # Use the system OpenGL as recommended by spack
@@ -52,8 +52,13 @@ packages:
   llvm:
     buildable: False
     externals:
-    - spec: llvm@20.1.8 +clang +lld
-      prefix: /usr/lib/llvm-20
+    #- spec: llvm@20.1.8 +clang +lld
+    #  prefix: /usr/lib/llvm-20
+    - spec: llvm@21.1.8 +clang +lld
+      prefix: /usr/lib/llvm21
+
+  gcc:
+    buildable: True
 
   boost:
     require: +python
@@ -145,7 +150,7 @@ packages:
   # excludes 2.7.1 is enough to let the newest release win. Use a floor (not an
   # exact pin) so future releases are picked up automatically.
   py-torch:
-    require: '@2.8:~cuda+custom-protobuf'
+    require: '@2.8:+custom-protobuf'
 
   # The versions of py-onnx and py-onnxruntime should be consistent based on this table
   # https://onnxruntime.ai/docs/reference/compatibility.html#onnx-opset-support

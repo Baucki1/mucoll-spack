@@ -216,7 +216,7 @@ class Acts(CMakePackage, CudaPackage):
     depends_on("nlohmann-json @3.10.5:", when="+json")
     depends_on("nlohmann-json @3.11.3:", when="@45: +json")
     depends_on("torch-scatter", when="+gnn")
-    depends_on("torch-scatter +cuda", when="+cuda")
+    depends_on("torch-scatter +cuda", when="+gnn +cuda")
     depends_on("podio @0.16:", when="+edm4hep")
     depends_on("podio @:1.4", when="@:44.1 +edm4hep +examples")
     depends_on("podio @0.16:", when="+podio")
