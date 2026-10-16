@@ -40,6 +40,8 @@ class Acts(BuiltinActs):
             args.append(self.define("ACTS_BUILD_EXAMPLES_ROOT", True))
         if self.spec.satisfies("+python"):
             args.append(self.define("ACTS_BUILD_PYTHON_BINDINGS", True))
+        if self.spec.satisfies("+gnn") and self.spec.satisfies("+cuda"):
+            args.append(self.define("ACTS_ENABLE_CUDA", True))
         return args
 
     @run_after("install")
